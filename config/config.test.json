@@ -1,0 +1,64 @@
+{
+  "app": {
+    "wishlistPremiere": "5c62fe02fc13ae04c4000064"
+  },
+  "databaseConfig": {
+    "host": "127.0.0.1",
+    "port": "27017",
+    "database": "marasco",
+    "queryOptions": "?authSource=admin",
+    "username": "razorphish",
+    "password": "RaC0nt@Ur1+2"
+  },
+  "mailchimp": {
+    "apiKey": "449fb782f3b40ae6c93c5d46f5da475b-us3",
+    "listMarasco": "f1fb37cb8f"
+  },
+  "mandrill": {
+    "apiKey": "4HXB52ELNM7qeEK5V1MpzA",
+    "from_email": "david@maras.co",
+    "from_name": "Maras.co Support",
+    "reply_to": "david@maras.co"
+  },
+  "twitter": {
+    "consumerKey": "Z0kN4Al34y7t8wBXeDoDcneUm",
+    "consumerSecret": "b6YvlHEqjC0sN1w9QoX7zTsIQuKMJlaoeOfJdV5ArpOgRDK7yw",
+    "accessToken": "927238410078584832-foGSx89OqlSDJTt7dsGKSGQye5NBR79",
+    "accessTokenSecret": "gChdLLUOkyNLxckdxQkMKqle0j1MMc9fsA21vTyp4PAW9",
+    "callBackUrl": "https://api.maras.co/api/twitter/callBack",
+    "provider": "twitter",
+    "tokenRequestName": "request_token",
+    "tokenAccessName": "access_token"
+  },
+  "winstonConfig": {
+    "file": {
+      "level": "silly",
+      "filename": "app.log",
+      "handleExceptions": true,
+      "json": true,
+      "maxsize": 5242880,
+      "maxFiles": 5,
+      "colorize": false,
+      "prettyPrint": true
+    },
+    "console": {
+      "level": "error",
+      "handleExceptions": false,
+      "json": false,
+      "colorize": true,
+      "prettyPrint": true
+    },
+    "exceptionHandlers": {
+      "file": {
+        "filename": "exceptions.log",
+        "json": true,
+        "prettyPrint": true
+      },
+      "console": {
+        "json": true,
+        "timestamp": true,
+        "prettyPrint": true
+      }
+    }
+  }
+}

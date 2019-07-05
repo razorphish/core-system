@@ -1,47 +1,57 @@
 #!/usr/bin/env nodejs
-const express = require('express'),
-  exphbs = require('express-handlebars'),
-  hbsHelpers = require('handlebars-helpers'),
-  hbsLayouts = require('handlebars-layouts'),
-  bodyParser = require('body-parser'),
-  cookieParser = require('cookie-parser'),
-  errorhandler = require('errorhandler'),
-  morgan = require('morgan'),
-  favicon = require('serve-favicon'),
-  database = require('./app/database/connection'),
-  seeder = require('./app/database/seeder'),
-  logger = require('./lib/winston.logger'),
-  webPushConfig = require('./lib/config.loader').webPush;
-//authRoutesJwt = require('./app/routes/JWT');
-//Antonio
-//Instantiate libraries
-
-
+const express = require('express');
+const exphbs = require('express-handlebars');
+const hbsLayouts = require('handlebars-layouts');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const errorhandler = require('errorhandler');
+const morgan = require('morgan');
+const favicon = require('serve-favicon');
+const database = require('./app/database/connection');
+const logger = require('./lib/winston.logger');
+const cron = require('./app/job/index');
+const twitterPublisher = require('./app/queue/publisher/twitter/twitter-follower.publisher');
+const consumer = require('./app/queue/consumer/index');
 //====================================
 
 (app = express()), (port = 3003);
 
 class Server {
-
+  /**
+   *Creates an instance of Server.
+   * @author Antonio Marasco
+   * @date 2019-07-03
+   * @memberof Server
+   */
   constructor() {
     this.initViewEngine();
     this.initExpressMiddleWare();
     this.initCustomMiddleware();
-    this.initDbSeeder();
+    this.initDb();
+    this.initCron();
+    this.initQueue();
     this.start();
   }
 
-  start() {
-    module.exports = app.listen(port, err => {
-      logger.debug(
-        '[%s] Listening on http://localhost:%d',
-        process.env.NODE_ENV,
-        port
-      );
+  /**
+   * @description Initializes all the cron jobs
+   * @author Antonio Marasco
+   * @date 2019-07-03
+   * @memberof Server
+   */
+  initCron() {
+    logger.debug('---===Initializing Cron===---');
+    cron.start();
+  }
+
+  initDb() {
+    logger.debug('---===Initializing Database===---');
+    database.open(() => {
     });
   }
 
   initCustomMiddleware() {
+    logger.debug('---===Initializing Custom Middlewaare===---');
     if (process.platform === 'win32') {
       require('readline')
         .createInterface({
@@ -60,18 +70,8 @@ class Server {
     });
   }
 
-  initDbSeeder() {
-    database.open(() => {
-      //Set NODE_ENV to 'development' and uncomment the following if to only run
-      //the seeder when in dev mode
-      //if (process.env.NODE_ENV === 'development') {
-      //  seeder.init();
-      //}
-      seeder.init();
-    });
-  }
-
   initExpressMiddleWare() {
+    logger.debug('---===Initializing Middleware===---');
     app.use(favicon(__dirname + '/public/images/favicon.ico'));
     app.use(express.static(__dirname + '/public'));
     app.use(morgan('dev'));
@@ -80,33 +80,6 @@ class Server {
     app.use(errorhandler());
 
     app.use(cookieParser());
-    // app.use(cookieParser({
-    //   key: "mysite.sid.uid.whatever",
-    //   secret: 'secret123', //**SET ENCRYPTED SECRET IN ENV process.env["SESSION_SECRET"],
-    //   cookie: {
-    //     maxAge: 2678400000 // 31 days
-    //   },
-    // }));
-    // Replace line below with:
-    // app.use(csrf({ cookie: false }));
-
-    //Declare public routes BEFORE XSRF so they
-    //do not need the xsrf cookie
-
-    //app.use(csrf({ cookie: true }));
-
-    // // UnCOMMENT WHEN SOLUTION FOUND FOR CSRF
-    // app.use((req, res, next) => {
-    //   if (req.method === 'OPTIONS') {
-    //     console.log('Options');
-    //   }
-    //   var csrfToken = req.csrfToken();
-    //   res.locals._csrf = csrfToken;
-    //   res.cookie('XSRF-TOKEN', csrfToken);
-    //   // console.log('csrf-token: ' + csrfToken);
-    //   next();
-    // });
-    //process.setMaxListeners(0);
 
     process.on('uncaughtException', err => {
       if (err) {
@@ -115,6 +88,16 @@ class Server {
     });
   }
 
+  /**
+   * @description Initializes the queue
+   * @author Antonio Marasco
+   * @date 2019-07-05
+   * @memberof Server
+   */
+  initQueue() {
+    twitterPublisher.publish('Hello World');
+    consumer.start();
+  }
 
   /**
    * @description Inits View Engine of Node
@@ -123,6 +106,7 @@ class Server {
    * @memberof Server
    */
   initViewEngine() {
+    logger.debug('---===Initializing View Engine===---');
     const hbs = exphbs.create({
       extname: '.hbs',
       defaultLayout: 'master'
@@ -130,6 +114,28 @@ class Server {
     app.engine('hbs', hbs.engine);
     app.set('view engine', 'hbs');
     hbsLayouts.register(hbs.handlebars, {});
+  }
+
+  /**======================================== */
+
+  /**
+   * @description Starts node system
+   * @author Antonio Marasco
+   * @date 2019-07-03
+   * @memberof Server
+   */
+  start() {
+
+    module.exports = app.listen(port, err => {
+      // logger.debug(
+      //   '[%s] Listening on http://localhost:%d',
+      //   process.env.NODE_ENV,
+      //   port
+      // );
+      logger.debug('---===Initializing COMPLETE [%s] Listening on http://localhost:%d===---',
+        process.env.NODE_ENV,
+        port);
+    });
   }
 }
 

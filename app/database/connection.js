@@ -107,7 +107,7 @@ class Database {
         });
 
         mongoose.connection.once('open', () => {
-            logger.debug('We have connected to mongodb');
+            logger.debug('---===Database Connection to MongoDB SUCCESS===---');
             done(null, true);
         });
 

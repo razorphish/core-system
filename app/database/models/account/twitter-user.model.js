@@ -5,8 +5,14 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 ///////////////////////// Parent Schema
-const TwitterUserSchema = new Schema({
-    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, trim: true },
+const TwitterUserSchema = new Schema(
+  {
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+      trim: true
+    },
     twitterId: { type: String, required: true, trim: true },
     name: { type: String, required: true, trim: true },
     screenName: { type: String, required: true },
@@ -16,18 +22,23 @@ const TwitterUserSchema = new Schema({
     payload: { type: String, required: true, trim: true },
     dateCreated: { type: Date, required: true, default: Date.now },
     dateModified: { type: Date, required: true, default: Date.now }
+  },
+  {
+    toJSON: {
+      virtuals: true
+    }
+  }
+);
+
+TwitterUserSchema.pre('save', function(next) {
+  if (this.dateModified) {
+    this.dateModified = new Date();
+  }
+  next();
 });
 
-TwitterUserSchema.pre('save', function (next) {
-    if (this.dateModified) {
-        this.dateModified = new Date();
-    }
-    next();
-},
-    {
-        toJSON: {
-            virtuals: true
-        }
-    });
-
-module.exports = mongoose.model('TwitterUser', TwitterUserSchema, 'twitterUsers');
+module.exports = mongoose.model(
+  'TwitterUser',
+  TwitterUserSchema,
+  'twitterUsers'
+);

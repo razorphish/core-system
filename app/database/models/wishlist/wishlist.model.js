@@ -2,27 +2,34 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const Preference = require('./wishlist-preference.model');
 
-const WishlistSchema = new Schema({
-    name: { type: String, required: true, trim: true },
-    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, trim: true },
-    preferences: { type: Preference.schema, required: true },
-    statusId: {
-        type: String,
-        required: true,
-        enum: ['active', 'inactive', 'disabled', 'pending', 'archived', 'suspended', 'deleted'],
-        default: 'active'
+const WishlistSchema = new Schema(
+    {
+        name: { type: String, required: true, trim: true },
+        userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, trim: true },
+        preferences: { type: Preference.schema, required: true },
+        statusId: {
+            type: String,
+            required: true,
+            enum: ['active', 'inactive', 'disabled', 'pending', 'archived', 'suspended', 'deleted'],
+            default: 'active'
+        },
+        privacy: {
+            type: String,
+            required: true,
+            enum: ['private', 'public'],
+            default: 'public'
+        },
+        //items: { type: [WishlistItem.schema], ref: 'WishlistItem' },
+        dateExpire: { type: Date, required: false },
+        dateCreated: { type: Date, required: true, default: Date.now },
+        dateModified: { type: Date, required: true, default: Date.now }
     },
-    privacy: {
-        type: String,
-        required: true,
-        enum: ['private', 'public'],
-        default: 'public'
-    },
-    //items: { type: [WishlistItem.schema], ref: 'WishlistItem' },
-    dateExpire: { type: Date, required: false },
-    dateCreated: { type: Date, required: true, default: Date.now },
-    dateModified: { type: Date, required: true, default: Date.now }
-}, { toJSON: { virtuals: true } });
+    {
+        toJSON:
+        {
+            virtuals: true
+        }
+    });
 
 ///PRE _SAVE
 WishlistSchema.pre('save', function (next) {

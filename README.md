@@ -227,6 +227,9 @@ keytool -exportcert -keystore path-to-debug-or-production-keystore -list -v
 
 **jti**: Unique identifier for the JWT. Can be used to prevent the JWT from being replayed. This is helpful for a one time use token.
 
+## RabbitMQ
+[Setting up RabbitMQ on Ubuntu](https://computingforgeeks.com/how-to-install-latest-rabbitmq-server-on-ubuntu-18-04-lts/)
+
 ## Authors
 
 * **Antonio Marasco** - *Initial work* - david@maras.co

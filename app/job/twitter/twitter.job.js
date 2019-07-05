@@ -1,6 +1,7 @@
 const CronJob = require('cron').CronJob;
+const logger = require('../../../lib/winston.logger');
 
-class CronLibrary {
+class TwitterJob {
     constructor() {
 
     }
@@ -17,13 +18,16 @@ class CronLibrary {
 
     twitterFollower() {
         // Run every fifteen minutes
+        logger.debug('---===Initializing Cron: Twitter Follower===---');
 
-        const job = new CronJob('0 */15 * * * *', () => {
+        const job = new CronJob('0 */1 * * * *', () => {
+            const d = new Date();
 
+            logger.debug('TWITTER FOLLOWER JOB RUNNING', d);
         });
 
         job.start();
     }
 }
 
-module.exports = new CronLibrary();
+module.exports = new TwitterJob();

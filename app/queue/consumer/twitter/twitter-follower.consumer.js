@@ -12,7 +12,7 @@ const logger = require('../../../../lib/winston.logger');
 class TwitterFollowerConsumer {
     constructor() {
         //Logging Info
-        this._classInfo = '*** [TwitterFollower].consume';
+        this._classInfo = '*** [TwitterFollower].consumer';
         this._queueName = 'twitter_follower'
     }
 
@@ -36,7 +36,7 @@ class TwitterFollowerConsumer {
                 });
 
                 logger.debug(
-                    `${this._classInfo}consume()::Waiting for messages`
+                    `${this._classInfo}.consume()::Waiting for messages`
                 );
                 //console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", queue);
 

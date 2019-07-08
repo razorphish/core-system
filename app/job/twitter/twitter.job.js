@@ -20,7 +20,7 @@ class TwitterJob {
         // Run every fifteen minutes
         logger.debug('---===Initializing Cron: Twitter Follower===---');
 
-        const job = new CronJob('0 */1 * * * *', () => {
+        const job = new CronJob('0 */15 * * * *', () => {
             const d = new Date();
 
             logger.debug('TWITTER FOLLOWER JOB RUNNING', d);

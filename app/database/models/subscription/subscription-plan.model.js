@@ -21,7 +21,8 @@ const SubscriptionPlanSchema = new Schema(
         {
             virtuals: true
         }
-    });
+    }
+);
 
 ///PRE _SAVE
 SubscriptionPlanSchema.pre('save', function (next) {

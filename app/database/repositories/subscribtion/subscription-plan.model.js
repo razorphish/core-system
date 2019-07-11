@@ -12,7 +12,8 @@ const logger = require('../../../../lib/winston.logger');
 
 /**
  * [SubscriptionPlan] Repository
- * @author Antonio Marasco
+ * @author Antonio Marascojob
+ * 
  * @class [SubscriptionPlan] Repository
  */
 class SubscriptionPlanRepository {

@@ -1,4 +1,5 @@
 const amqp = require('amqplib/callback_api');
+const publishEnum = require('../enum').TwitterJobEnum;
 const logger = require('../../../../lib/winston.logger');
 
 /**
@@ -13,7 +14,8 @@ class TwitterFollowerConsumer {
     constructor() {
         //Logging Info
         this._classInfo = '*** [TwitterFollower].consumer';
-        this._queueName = 'twitter_follower'
+        this._queueName = publishEnum.QUEUE_FOLLOWER;
+        this._exchangeName = publishEnum.EXCHANGE_FOLLOWER;
     }
 
     consume() {
@@ -22,6 +24,8 @@ class TwitterFollowerConsumer {
                 logger.error(`${this._classInfo}.consume()::RabbitMQ Connect`, error0);
                 throw error0;
             }
+
+            //Create Channel
             connection.createChannel((error1, channel) => {
                 if (error1) {
                     logger.error(`${this._classInfo}.consume()::Create Channel`, error0);
@@ -29,27 +33,43 @@ class TwitterFollowerConsumer {
                 }
 
                 logger.debug(`${this._classInfo}.consume()::Connected to RabbitMQ Channel`);
-                var queue = 'twitter_follower';
 
-                channel.assertQueue(queue, {
+                channel.assertExchange(this._exchangeName, {
                     durable: false
                 });
 
                 logger.debug(
                     `${this._classInfo}.consume()::Waiting for messages`
                 );
-                //console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", queue);
 
-                channel.consume(queue, (message) => {
-                    //console.log(" [x] Received %s", message.content.toString());
+                channel.assertQueue('', {
+                    exclusive: true
+                }, (error2, q) => {
+                    if (error2) {
+                        throw error2;
+                    }
+
                     logger.debug(
-                        `${this._classInfo}.consume()::Received OK`,
-                        `${message.content.toString()}`
+                        `${this._classInfo}.consume()::assertQueue OK`,
+                        `${q.queue}`
                     );
-                },
-                    {
-                        noAck: true
-                    });
+
+                    //Bind the queue to exchange
+                    channel.bindQueue(q.queue, this._exchangeName, '');
+
+                    //consume the message from the queue
+                    channel.consume(q.queue, (message) => {
+                        //console.log(" [x] Received %s", message.content.toString());
+                        logger.debug(
+                            `${this._classInfo}.consume()::Received OK`,
+                            `${message.content.toString()}`
+                        );
+                    },
+                        {
+                            noAck: true
+                        }
+                    );
+                });
             });
         });
     }

@@ -1,5 +1,6 @@
 const amqp = require('amqplib/callback_api');
-const logger = require('../../../../lib/winston.logger');
+const publishEnum = require('../enum').TwitterJobEnum;
+const logger = require('../../../lib/winston.logger');
 
 /**
  * This callback type is called `requestCallback` and is displayed as a global symbol.
@@ -13,7 +14,10 @@ class TwitterFollowerPublisher {
     constructor() {
         //Logging Info
         this._classInfo = '*** [TwitterFollower].publisher';
-        this._queueName = 'twitter_follower'
+
+        //Queue Info
+        this._queueName = publishEnum.QUEUE_FOLLOWER;
+        this._exchangeName = publishEnum.EXCHANGE_FOLLOWER;
     }
 
     publish(message) {
@@ -34,12 +38,15 @@ class TwitterFollowerPublisher {
                 }
 
                 logger.debug(`${this._classInfo}.follower()::Connected to RabbitMQ Channel`);
-                //Create Queue of use existing
-                channel.assertQueue(this._queueName, {
+
+                //Create exchange
+                channel.assertExchange(this._exchangeName, {
                     durable: false
                 });
 
-                channel.sendToQueue(this._queueName, Buffer.from(message));
+                //publish message to exchange
+                channel.publish(this._exchangeName, '', Buffer.from(message));
+
                 logger.debug(
                     `${this._classInfo}.sendToQueue() OK`,
                     `${message}`

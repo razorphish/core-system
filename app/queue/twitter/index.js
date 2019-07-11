@@ -1,4 +1,4 @@
-const twitterFollowerConsumer = require('./twitter/twitter-follower.consumer');
+const twitterFollowerConsumer = require('./consumer/twitter-follower.consumer');
 
 class Consumer {
     constructor() {

@@ -10,8 +10,8 @@ const favicon = require('serve-favicon');
 const database = require('./app/database/connection');
 const logger = require('./lib/winston.logger');
 const cron = require('./app/job/index');
-const twitterPublisher = require('./app/queue/publisher/twitter/twitter-follower.publisher');
-const consumer = require('./app/queue/consumer/index');
+const twitterPublisher = require('./app/queue/twitter/publisher/twitter-follower.publisher');
+const twitterConsumer = require('./app/queue/twitter/index');
 //====================================
 
 (app = express()), (port = 3003);
@@ -95,8 +95,10 @@ class Server {
    * @memberof Server
    */
   initQueue() {
-    twitterPublisher.publish('Hello World');
-    consumer.start();
+    // twitterPublisher.publish([{ name: 'Hello World2', company: 'Maras.co', meta: '{"peace": "yep"}'}], (error, result) => {
+
+    // });
+    twitterConsumer.start();
   }
 
   /**

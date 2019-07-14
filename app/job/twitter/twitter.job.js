@@ -1,9 +1,10 @@
 const CronJob = require('cron').CronJob;
 const logger = require('../../../lib/winston.logger');
 const jobRepo = require('../../database/repositories/job/job.repository');
-const twitterEnum = require('./twitter.enum');
+const jobNames = require('./twitter.enum');
 const async = require('async');
 const moment = require('moment');
+const queue = require('../../queue/twitter/publisher/twitter-follower.publisher');
 
 class TwitterJob {
     constructor() {
@@ -21,7 +22,7 @@ class TwitterJob {
     };
 
     /**
-     * @description Gets Twitter follower ids
+     * @description Gets Twitter follower ids [Step 1 for follower]
      * @author Antonio Marasco
      * @date 2019-07-09
      * @memberof TwitterJob
@@ -47,7 +48,7 @@ class TwitterJob {
                     let filter = {
                         activityStatusId: 'ready',
                         statusId: 'active',
-                        name: twitterEnum.TwitterJobEnum.BY_FOLLOWER_ID,
+                        name: jobNames.TwitterJobEnum.BY_FOLLOWER_ID,
                         'execution.kickoff': { $gte: kickOff }
                     }
 
@@ -64,7 +65,7 @@ class TwitterJob {
                 //2.  Get all current running records
                 (result, done) => {
                     jobRepo.byName(
-                        twitterEnum.BY_FOLLOWER_ID,
+                        jobNames.BY_FOLLOWER_ID,
                         {
                             activityStatusId: 'running',
                             statusId: 'active'
@@ -82,12 +83,16 @@ class TwitterJob {
                 },
                 //3. Iterate through jobs and send to queue for processing
                 (jobs, done) => {
-                    //Iterate through jobs and send to queue
-                    jobs.forEach((job, index) => {
-                        //Add to queue
-                        logger.debug(`${this._classInfo}.twitterFollower():3:forEach Job OK`);
-                        return done(null, __oauth_token)
-                    })
+
+                    queue.publish(jobs, (error, result) => {
+                        if (error) {
+                            logger.error(`${this._classInfo}.twitterFollower():3:publish`, error);
+                            throw error;
+                        } else {
+                            logger.debug(`${this._classInfo}.twitterFollower():3:publish OK`);
+                            done(null, result)
+                        }
+                    });
                 }
             ], (error, result) => {
                 if (error) {
@@ -96,7 +101,6 @@ class TwitterJob {
                 return result;
             });
 
-            logger.debug('TWITTER FOLLOWER JOB RUNNING', d);
         });
 
         job.start();

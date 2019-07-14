@@ -10,7 +10,10 @@ let connection = null;
 class Database {
 
     /**
-     * Close the database
+     * @description Close the MongoDB connection
+     * @author Antonio Marasco
+     * @date 2019-07-12
+     * @memberof Database
      */
     close() {
         connection.close(() => {
@@ -21,6 +24,14 @@ class Database {
         });
     }
 
+    /**
+     * @description Drops the database
+     * @author Antonio Marasco
+     * @date 2019-07-12
+     * @param {function} done
+     * @returns 
+     * @memberof Database
+     */
     drop(done) {
         if (!connection) {
             return done()
@@ -35,21 +46,16 @@ class Database {
                 collection.deleteOne(cb)
             }, done)
         })
-
-        // This is faster then dropping the database
-        // connection.collections((err, collections) => {
-        // async.each(collections, (collection, cb) => {
-        // async.each(connection.db.collectionNames, (collection, cb) => {
-        //     if (collection.collectionName.indexOf('system') === 0) {
-        //         console.log('no')
-        //         return cb()
-        //     }
-        //     console.log('yes')
-        //     collection.remove(cb)
-        // }, done)
-        // })
     }
 
+    /**
+     * @description Mainly used for testing; Adds large documents to MongoDB
+     * @author Antonio Marasco
+     * @date 2019-07-12
+     * @param {*} data
+     * @param {function} done
+     * @memberof Database
+     */
     fixtures(data, done) {
         if (!connection) {
             return done(new Error('Missing database connection.'))
@@ -75,10 +81,24 @@ class Database {
         }, done)
     }
 
+    /**
+     * @description Gets MongoDB Connection
+     * @author Antonio Marasco
+     * @date 2019-07-12
+     * @returns 
+     * @memberof Database
+     */
     getDatabase() {
         return connection;
     }
 
+    /**
+     * @description Opens MongoDB connection
+     * @author Antonio Marasco
+     * @date 2019-07-12
+     * @param {function} done
+     * @memberof Database
+     */
     open(done) {
         const options = {
             user: dbConfig.username,
@@ -110,7 +130,6 @@ class Database {
             logger.debug('---===Database Connection to MongoDB SUCCESS===---');
             done(null, true);
         });
-
     }
 }
 

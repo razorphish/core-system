@@ -10,10 +10,10 @@ const TwitterUserSchema = new Schema(
     userId: {
       type: Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
-      trim: true
+      required: true
     },
     twitterId: { type: String, required: true, trim: true },
+    tokenId: { type: Schema.Types.ObjectId, ref: 'Token' },
     name: { type: String, required: true, trim: true },
     screenName: { type: String, required: true },
     location: { type: String, required: false },

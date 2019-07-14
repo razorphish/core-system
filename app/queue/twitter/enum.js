@@ -1,4 +1,6 @@
-module.exports.TwitterJobEnum = { 
-    QUEUE_FOLLOWER: Symbol('twitter_follower_queue'),
-    EXCHANGE_FOLLOWER: Symbol('twitter_follower_exchange') 
+const twitterJobEnum = { 
+    QUEUE_FOLLOWER: 'twitter_follower_queue',
+    EXCHANGE_FOLLOWER: 'twitter_follower_exchange' 
 }
+
+module.exports.TwitterJobEnum = twitterJobEnum;

@@ -1,13 +1,13 @@
-const twitterFollowerConsumer = require('./consumer/twitter-follower.consumer');
+const twitterFollowerWorker = require('./worker/twitter-follower.worker');
 
-class Consumer {
+class TwitterConsumer {
     constructor() {
         this._classInfo = '***[Consumer].index';
     }
 
     start() {
-        twitterFollowerConsumer.consume();
+        twitterFollowerWorker.consume();
     }
 }
 
-module.exports = new Consumer();
+module.exports = new TwitterConsumer();

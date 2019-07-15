@@ -1,3 +1,6 @@
-module.exports.TwitterJobEnum = { 
-    BY_FOLLOWER_ID: Symbol('GETUSERFOLLOWERID') 
+const twitterJobEnum = {
+    BY_FOLLOWER_ID: 'GETUSERFOLLOWERID' 
+
 }
+
+module.exports.TwitterJobEnum = twitterJobEnum;

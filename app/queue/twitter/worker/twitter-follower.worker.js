@@ -1,5 +1,5 @@
 const amqp = require('amqplib/callback_api');
-const publishEnum = require('../enum').TwitterJobEnum;
+const publishEnum = require('../enum').TwitterQueueEnum;
 const logger = require('../../../../lib/winston.logger');
 const twitterLib = require('../../../../lib/twitterLibrary').twitter;
 const moment = require('moment');

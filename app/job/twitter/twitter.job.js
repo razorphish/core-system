@@ -32,7 +32,6 @@ class TwitterJob {
         logger.debug('---===Initializing Cron: Twitter Follower===---');
 
         const job = new CronJob('0 */15 * * * *', () => {
-            const d = new Date();
 
             async.waterfall([
                 //1. Update documents to kickoff process
@@ -97,6 +96,7 @@ class TwitterJob {
             ], (error, result) => {
                 if (error) {
                     //Send email
+                    //TODO:
                 }
                 return result;
             });

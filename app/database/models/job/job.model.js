@@ -25,7 +25,7 @@ const JobSchema = new Schema(
     activityStatusId: {
       type: String,
       required: true,
-      enum: ['ready', 'running', 'paused', 'fail', 'restarted', 'completed'],
+      enum: ['ready', 'processing', 'paused', 'fail', 'restarted', 'completed'],
       default: 'active',
     },
     execution: { type: ExecutionSchema },

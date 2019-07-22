@@ -40,7 +40,7 @@ class TwitterJob {
                     const kickOff = moment.utc();
 
                     let update = {
-                        activityStatusId: 'running',
+                        activityStatusId: 'processing',
                         'execution.started': moment.utc()
                     }
 
@@ -61,18 +61,18 @@ class TwitterJob {
                         }
                     });
                 },
-                //2.  Get all current running records
+                //2.  Get all current processing records
                 (result, done) => {
                     jobRepo.byName(
                         jobNames.BY_FOLLOWER_ID,
                         {
-                            activityStatusId: 'running',
+                            activityStatusId: 'processing',
                             statusId: 'active'
                         },
                         (error, jobs) => {
                             if (error) {
                                 logger.error(`${this._classInfo}.twitterFollower():2:byName`, error);
-                                throw error;
+                                done(error);
                             } else {
                                 logger.debug(`${this._classInfo}.twitterFollower():2:byName OK`);
                                 done(null, jobs)
@@ -80,13 +80,13 @@ class TwitterJob {
                         }
                     );
                 },
-                //3. Iterate through jobs and send to queue for processing
+                //3. Send jobs to queue for processing
                 (jobs, done) => {
 
                     queue.publish(jobs, (error, result) => {
                         if (error) {
                             logger.error(`${this._classInfo}.twitterFollower():3:publish`, error);
-                            throw error;
+                            done(error);
                         } else {
                             logger.debug(`${this._classInfo}.twitterFollower():3:publish OK`);
                             done(null, result)

@@ -110,26 +110,19 @@ class JobRepository {
   /**
    * Gets a {job} by name
    * @param {string} name Name to get {job} by
-   * @param {Object} query query parameters for additional filtering
+   * @param {Object} conditions query parameters for additional filtering
    * @param {requestCallback} callback Handles the response
    * @example byApplicationId('application_id', (error, data) => {})
    */
-  byName(name, query, callback) {
+  byName(name, conditions, callback) {
     logger.debug(`${this._classInfo}.byName(${name})`);
 
-    if (utils.isFunction(query)) {
-      callback = query;
-      query = {};
+    if (utils.isFunction(conditions)) {
+      callback = conditions;
+      conditions = {};
     }
 
     let kickoff = moment.utc();
-
-    let conditions = Object.assign({
-      name: name,
-      activityStatusId: 'ready',
-      status: 'active',
-      'execution.kickoff': { $gte: kickoff }
-    }, query || {});
 
     model.find(
       conditions

@@ -51,7 +51,7 @@ class Server {
   }
 
   initCustomMiddleware() {
-    logger.debug('---===Initializing Custom Middlewaare===---');
+    logger.debug('---===Initializing Custom Middleware===---');
     if (process.platform === 'win32') {
       require('readline')
         .createInterface({

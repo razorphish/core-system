@@ -31,24 +31,26 @@ class TwitterJob {
         // Run every fifteen minutes
         logger.debug('---===Initializing Cron: Twitter Follower===---');
 
-        const job = new CronJob('0 */15 * * * *', () => {
+        const job = new CronJob('0 */3 * * * *', () => {
 
             async.waterfall([
                 //1. Update documents to kickoff process
                 (done) => {
                     //Update documents
-                    const kickOff = moment.utc();
+                    const kickoff = moment.utc();
 
                     let update = {
-                        activityStatusId: 'processing',
-                        'execution.started': moment.utc()
+                        $set: {
+                            activityStatusId: 'processing',
+                            'execution.started': moment().utc()
+                        }
                     }
 
                     let filter = {
                         activityStatusId: 'ready',
                         statusId: 'active',
                         name: jobNames.TwitterJobEnum.BY_FOLLOWER_ID,
-                        'execution.kickoff': { $gte: kickOff }
+                        'execution.kickoff': { $lte: kickoff }
                     }
 
                     jobRepo.updateMany(filter, update, (error, result) => {
@@ -64,7 +66,7 @@ class TwitterJob {
                 //2.  Get all current processing records
                 (result, done) => {
                     jobRepo.byName(
-                        jobNames.BY_FOLLOWER_ID,
+                        jobNames.TwitterJobEnum.BY_FOLLOWER_ID,
                         {
                             activityStatusId: 'processing',
                             statusId: 'active'

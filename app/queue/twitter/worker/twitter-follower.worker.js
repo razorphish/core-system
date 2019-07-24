@@ -153,7 +153,7 @@ class TwitterFollowerWorker {
                             ],
                                 (error, results) => {
                                     if (error) {
-
+                                        
                                     }
                                     next(results);
                                 });

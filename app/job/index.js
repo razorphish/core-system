@@ -1,4 +1,4 @@
-const twitterJob = require('./twitter/twitter.job');
+const twitterJob = require('./twitter/index');
 
 class JobLibrary {
     constructor() { }

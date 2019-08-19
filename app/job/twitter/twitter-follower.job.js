@@ -6,7 +6,7 @@ const async = require('async');
 const moment = require('moment');
 const queue = require('../../queue/twitter/publisher/twitter-follower.publisher');
 
-class TwitterJob {
+class TwitterFollowerJob {
     constructor() {
         this._classInfo = '*** [Twitter].job';
     }
@@ -99,6 +99,7 @@ class TwitterJob {
                 if (error) {
                     //Send email
                     //TODO:
+                    logger.error(`${this._classInfo}.twitterFollower():ERROR`, error);
                 }
                 return result;
             });
@@ -109,4 +110,4 @@ class TwitterJob {
     }
 }
 
-module.exports = new TwitterJob();
+module.exports = new TwitterFollowerJob();

@@ -66,7 +66,7 @@
     "moment": "^2.24.0",
     "mongoose": "^5.3.13",
     "mongoose-type-email": "^1.0.10",
-    "morgan": "^1.9.1",
+    "morgan": "^1.10.0",
     "serve-favicon": "^2.5.0",
     "twitter-node-client": "github:razorphish/TwitterJSClient",
     "winston": "^2.4.2"

@@ -36,7 +36,7 @@
     "chai": "^4.2.0",
     "chai-http": "^4.2.0",
     "chai-spies": "^1.0.0",
-    "concurrently": "^4.0.1",
+    "concurrently": "^7.0.0",
     "coveralls": "^3.0.2",
     "istanbul": "^0.4.5",
     "mocha": "^5.2.0",

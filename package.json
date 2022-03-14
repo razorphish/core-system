@@ -39,7 +39,7 @@
     "concurrently": "^4.0.1",
     "coveralls": "^3.0.2",
     "istanbul": "^0.4.5",
-    "mocha": "^5.2.0",
+    "mocha": "^9.2.2",
     "sinon": "^7.2.0",
     "sinon-mongoose": "^2.2.1"
   },

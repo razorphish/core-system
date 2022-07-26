@@ -64,7 +64,7 @@
     "mailchimp-api-v3": "^1.12.1",
     "mandrill-api": "^1.0.45",
     "moment": "^2.24.0",
-    "mongoose": "^5.3.13",
+    "mongoose": "^6.4.7",
     "mongoose-type-email": "^1.0.10",
     "morgan": "^1.9.1",
     "serve-favicon": "^2.5.0",
